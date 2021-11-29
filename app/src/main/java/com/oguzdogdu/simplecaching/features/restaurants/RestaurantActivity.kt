@@ -1,6 +1,7 @@
 package com.oguzdogdu.simplecaching.features.restaurants
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ class RestaurantActivity : AppCompatActivity() {
         val binding = ActivityRestaurantBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.shimmer.startShimmer()
         val restaurantAdapter = RestaurantAdapter()
 
         binding.apply {
@@ -26,7 +28,11 @@ class RestaurantActivity : AppCompatActivity() {
             }
 
             viewModel.restaurants.observe(this@RestaurantActivity) { restaurants ->
+                binding.shimmer.stopShimmer()
+                binding.shimmer.visibility = View.GONE
+                binding.recyclerView.visibility = View.VISIBLE
                 restaurantAdapter.submitList(restaurants)
+
             }
         }
     }

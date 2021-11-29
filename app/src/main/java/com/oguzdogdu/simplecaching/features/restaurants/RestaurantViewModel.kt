@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RestaurantViewModel @Inject constructor(val api: RestaurantApi) : ViewModel() {
+class RestaurantViewModel @Inject constructor(private val api: RestaurantApi) : ViewModel() {
 
     private val restaurantsLiveData = MutableLiveData<List<Restaurant>>()
     val restaurants: LiveData<List<Restaurant>> = restaurantsLiveData
