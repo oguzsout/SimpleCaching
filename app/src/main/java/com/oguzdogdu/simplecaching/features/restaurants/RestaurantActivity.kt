@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.oguzdogdu.simplecaching.databinding.ActivityRestaurantBinding
+import com.oguzdogdu.simplecaching.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,12 +29,14 @@ class RestaurantActivity : AppCompatActivity() {
                 layoutManager = LinearLayoutManager(this@RestaurantActivity)
             }
 
-            viewModel.restaurants.observe(this@RestaurantActivity) { restaurants ->
-                binding.shimmer.stopShimmer()
-                binding.shimmer.visibility = View.GONE
+            viewModel.restaurants.observe(this@RestaurantActivity) { result ->
                 binding.recyclerView.visibility = View.VISIBLE
-                restaurantAdapter.submitList(restaurants)
-
+                restaurantAdapter.submitList(result.data)
+                binding.shimmer.stopShimmer()
+                binding.shimmer.isVisible =
+                    result is Resource.Loading && result.data.isNullOrEmpty()
+                textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+                textViewError.text = result.error?.localizedMessage
             }
         }
     }
